@@ -1,0 +1,134 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+	name: prod-api
+
+---
+apiVersion: v1
+data:
+	.dockerconfigjson: kljasdofjaoeija;lskdfjakjl3234324jklaldfa
+kind:Secret
+metadata:
+	name: docker-reg
+	namespace: prod-api
+type: kubernetes.io/dockerconfigjson
+
+---
+#For secrets
+apiVersion: secrets-store.csi.x-k8s.io/v1
+kind: SecretProviderClass
+metadata:
+	name: prod-spc
+	namespace: prod-api
+spec:
+	provider: azure
+	parameteres:
+		usePodIdentity: "false"
+		useVMManagedIdentity: "true"
+		userAssignedIdentity: "true"
+		userAssignedIdentityID: 343242342  #if empty, defaults to use the system assigned identityt on the VM
+		#This section will get into the keyvault and read whatever connection string is inside
+		#Then, it will save it in the secret class provided by AKS (container) so we can call it from the code
+		keyvaultName: kv-32234
+		objects:	|
+		  array:
+		    -  |
+			objectName: ConnectionStrings--PROD-applogs
+			objectAlias: ConnectionStrings__PROD__applogs
+			objectType: secret
+			objectVersion: ""
+		    -  |
+				#you keep goign if have more
+
+		tenantd: 234234234-23423423-234fsfs
+
+---
+#Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+	name: prod-audit-api
+	namespace: prod-api
+	labels:
+	  app: prod-audit-api
+spec:
+	replicas: 4
+	selector:
+	  matchLabels:
+	    service: prod-audit-api	
+	#everything inside template
+	tempate:
+	  metadata:
+	    labels:
+		app: prod-audit-api
+		service: prod-audit-api
+	  spec:
+	    imagePullSecrets:
+	      - name: docker-reg
+	  containers:
+	    - name: prod-audit-api
+	      resources:
+		requests:
+		  memory: "1G"
+		  cpu: "100m"
+		limits:
+		  memory: "2G"
+		  cpu: "500m"
+	      image: nexus.repository.com/dockerimagename:tagname
+	      imagePulPolicy: Always
+	      ports:
+	      - containerPort: 80
+	        protocol: TCP
+	      readinessProbe:
+	        httpGet:
+	          path: /API/healthcheck
+		  port: 80
+	      livenessProbe:
+	        tcpSocker:
+	        port: 80
+	        initialDelaySeconds: 2
+		periodSeconds: 900
+
+	      #Environment variables on the aks level
+	      env:
+		- name : ASPNETCORE_URLS
+		    value: http://+:80
+		- name : API_ENV
+		    value: PROD
+		- name : API_NAME
+		    value: AUDITAPI
+	      #env variables will be stored on this mountPath
+	      volumeMounts:
+		-name : secrests-prodstore-inline
+		    mountPath: "/mnt/secrets-store"
+		    readOnly: true
+		-name: tz-prod-config
+		    mountPath: /etc/localtime
+
+	volumes:
+	  - name: secrets-prodstore-inline
+	      csi:
+		driver: secrets-store.csi.k8s.io
+		readOnly: true
+		volumeAttributes:
+		  secretProviderClass: "prod-spc"
+	  - name: tz-prod-config
+	      hotPath:
+		path: /usr/share/zoneinfo/America/Chicago
+
+---
+apiVersion: v1
+kind: Service
+#nothing spectacular here. Follow common ones
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+#same, follow comong ones. here you specify nginx and permissions to reach api
+		
+	      
+			
+	                
+			
+		        
+			
+			

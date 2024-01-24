@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34221.43
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureProject", "AzureProject\AzureProject.csproj", "{F369DA4A-D27A-4CEB-A906-12CB3DD5530B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{66865296-4AA6-4175-B5DE-C26AD4893FA7}"
+	ProjectSection(SolutionItems) = preProject
+		Dockerfile = Dockerfile
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F369DA4A-D27A-4CEB-A906-12CB3DD5530B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F369DA4A-D27A-4CEB-A906-12CB3DD5530B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F369DA4A-D27A-4CEB-A906-12CB3DD5530B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F369DA4A-D27A-4CEB-A906-12CB3DD5530B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1423DFEE-56AF-4FAE-A880-BBB997D225CB}
+	EndGlobalSection
+EndGlobal
